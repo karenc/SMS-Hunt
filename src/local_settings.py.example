@@ -3,6 +3,7 @@
 #EsendexAccount
 
 account_settings = {
+    'sending' : False,
     'username' : 'username@example',
     'password' : 'password',
     'account' : 'account',

@@ -1,5 +1,9 @@
 from google.appengine.ext import webapp
 from Hunt import *
+import SMS
+import logging
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 # Create a hunt
 h = Hunt(name="Test hunt")
@@ -53,3 +57,4 @@ for s in h.successes:
 
 print h.finished_teams()
 print h.outstanding_teams()
+

@@ -2,6 +2,7 @@ from google.appengine.ext import db
 from google.appengine.api import users
 import random
 from datetime import datetime
+import logging
 
 class Hunt(db.Model):
     """Parent object of each treasure hunt"""

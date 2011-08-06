@@ -5,6 +5,22 @@ from google.appengine.ext.webapp import template
 from google.appengine.api import urlfetch
 import base64
 from xml.etree import ElementTree
+import logging
+
+def send(recipient, message):
+    """Send this message to the specified recipient. Returns an HTTP
+    code. If sending is false in account_settings, simply logs and
+    returns 200."""
+    logging.debug("Sending SMS to %s: %s" % (recipient, message))
+    if not account_settings['sending']:
+        return 200
+    url = 'http://api.esendex.com/v1.0/messagedispatcher'
+    encoded_username = base64.urlsafe_b64encode(account_settings['username']+':'+account_settings['password'])
+            
+    xml = """<?xml version='1.0' encoding='UTF-8'?><messages><accountreference>%s</accountreference><message><to>%s</to><body>%s</body></message></messages>""" % (account_settings['account'], recipient, message)  
+    result = urlfetch.fetch(url=url, method=urlfetch.POST, payload=xml, headers={'Content-Type' : 'text/xml', 'Authorization' : "Basic %s" % (encoded_username)})
+    return result.status_code
+    
 
 class SendSMS(webapp.RequestHandler):
     
@@ -21,16 +37,8 @@ class SendSMS(webapp.RequestHandler):
         message = self.request.get('message')
         template_values = {}
         if recipient and message:
-            
-            url = 'http://api.esendex.com/v1.0/messagedispatcher'
-            encoded_username = base64.urlsafe_b64encode(account_settings['username']+':'+account_settings['password'])
-            
-            xml = """<?xml version='1.0' encoding='UTF-8'?><messages><accountreference>%s</accountreference><message><to>%s</to><body>%s</body></message></messages>""" % (account_settings['account'], recipient, message)  
-            result = urlfetch.fetch(url=url, method=urlfetch.POST, payload=xml, headers={'Content-Type' : 'text/xml', 'Authorization' : "Basic %s" % (encoded_username)})
-
-            if result.status_code == 200:
-                root = ElementTree.fromstring(result.content)
-                template_values['message_id'] = root.getchildren()[0].attrib['id']
+            result = send(recipient, message)
+            if result == 200:
                 template_values['message'] = "Success!"
                 
             

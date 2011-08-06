@@ -1,3 +1,5 @@
+import logging
+
 from google.appengine.dist import use_library
 use_library('django', '1.2')
 from google.appengine.ext import webapp
@@ -19,6 +21,7 @@ Application = webapp.WSGIApplication(
 
 def main():
     """Kicks everything off"""
+    logging.getLogger().setLevel(logging.DEBUG)
     run_wsgi_app(Application)
 
 if __name__ == "__main__":
