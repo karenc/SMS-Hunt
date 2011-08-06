@@ -1,3 +1,5 @@
+import json
+
 from google.appengine.ext import webapp
 from Hunt import Hunt
 
@@ -13,6 +15,7 @@ class CreateHunt(webapp.RequestHandler):
             hunt.put()
         self.redirect('/hunt/%s' % hunt.key().id())
 
+
 class ShowHunt(webapp.RequestHandler):
     @utils.logged_in
     def get(self, hunt_id):
@@ -27,9 +30,15 @@ class ShowHunt(webapp.RequestHandler):
             return
         self.response.out.write('Hunt Name: %s' % hunt.name)
 
+
 class Clues(webapp.RequestHandler):
     @utils.logged_in
     def get(self, hunt_name):
         self.response.out.write(utils.render('templates/clues.html', {
             'hunt_name': hunt_name,
+            'clues': json.dumps([{
+                'id': '1',
+                'clue': 'Clue 1',
+                'answer': 'Answer 1'
+                }]),
             }))

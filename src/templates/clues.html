@@ -1,8 +1,16 @@
 <html>
     <head>
         <title>Clues for {{ hunt_name }}</title>
+        <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/js/list-edit.js"></script>
     </head>
     <body>
         <h1>Clues for {{ hunt_name }}</h1>
+        <table id="clues-list"></table>
+        <script type="text/javascript">
+            var clues = {{ clues|safe }};
+            var edit = new ListEdit(clues, 'clues-list', [
+                'Clue', 'Answer'], ['clue', 'answer']);
+        </script>
     </body>
 </html>
