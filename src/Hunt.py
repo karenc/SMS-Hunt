@@ -21,6 +21,11 @@ class Hunt(db.Model):
         t.put()
         return t
 
+    def setup_clues(self):
+        """Adds all clues to each team in a random order."""
+        for t in self.teams:
+            t._reset_clues()
+
     def finished_teams(self):
         """Returns all teams that have finished."""
         return filter(lambda t: t.finished(), self.teams)
@@ -49,8 +54,8 @@ class Team(db.Model):
     # initially with reset_clues
     clue_keys    = db.ListProperty(int, default=[])
 
-    def reset_clues(self):
-        """Populate clue_keys with a shuffled list of keys for the current clues"""
+    def _reset_clues(self):
+        """Populate clue_keys with a shuffled list of keys for the current clues. Should not be called publicly - use hunt.setup_clues()"""
         cids = [c.key().id() for c in self.hunt.clues]
         random.shuffle(cids)
         self.clue_keys = cids
