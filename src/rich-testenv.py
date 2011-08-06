@@ -57,3 +57,4 @@ for s in h.successes:
 
 print h.finished_teams()
 print h.outstanding_teams()
+
