@@ -11,9 +11,9 @@ h.put()
 
 # Add some clues to the hunt
 h.add_clue("Chair colour", "purple")
-h.add_clue("Hotel name", "Mint")
-h.add_clue("#leeds____?", "hack")
-h.add_clue("Rich's Twitter name", "pedantic_git")
+#h.add_clue("Hotel name", "Mint")
+#h.add_clue("#leeds____?", "hack")
+#h.add_clue("Rich's Twitter name", "pedantic_git")
 
 # Add some teams
 h.add_team("Foo", "071234567")
@@ -42,6 +42,9 @@ print "Started: %s\n" % h.started
 print h.finished_teams()
 print h.outstanding_teams()
 
+print h.finished_teams()
+print h.outstanding_teams()
+
 print_clues(h)
 
 for t in h.teams:
@@ -57,4 +60,3 @@ for s in h.successes:
 
 print h.finished_teams()
 print h.outstanding_teams()
-
