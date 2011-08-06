@@ -1,9 +1,17 @@
 import json
 
 from google.appengine.ext import webapp
-from Hunt import Hunt
+from Hunt import Hunt, Clue
 
 import utils
+
+def get_hunt_by_id(hunt_id):
+    '''Fetch the hunt given an id string'''
+    try:
+        hunt_id = int(hunt_id)
+    except ValueError:
+        return None
+    return Hunt.get_by_id(hunt_id)
 
 class Index(webapp.RequestHandler):
     @utils.logged_in
@@ -26,12 +34,7 @@ class CreateHunt(webapp.RequestHandler):
 class ShowHunt(webapp.RequestHandler):
     @utils.logged_in
     def get(self, hunt_id):
-        try:
-            hunt_id = int(hunt_id)
-        except ValueError:
-            self.redirect('/')
-            return
-        hunt = Hunt.get_by_id(hunt_id)
+        hunt = get_hunt_by_id(hunt_id)
         if not hunt:
             self.redirect('/')
             return
@@ -40,12 +43,17 @@ class ShowHunt(webapp.RequestHandler):
 
 class Clues(webapp.RequestHandler):
     @utils.logged_in
-    def get(self, hunt_name):
+    def get(self, hunt_id):
+        hunt = get_hunt_by_id(hunt_id)
+        if not hunt:
+            self.redirect('/')
+            return
+        clues = list(Clue.all().filter('hunt =', hunt))
         self.response.out.write(utils.render('templates/clues.html', {
-            'hunt_name': hunt_name,
+            'hunt_name': hunt.name,
             'clues': json.dumps([{
-                'id': '1',
-                'clue': 'Clue 1',
-                'answer': 'Answer 1'
-                }]),
+                'id': clue.key().id(),
+                'clue': clue.question,
+                'answer': clue.answer
+                } for clue in clues]),
             }))
