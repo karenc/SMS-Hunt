@@ -52,3 +52,25 @@ class Team(db.Model):
     def current_clue(self):
         """Get the current clue this team must solve"""
         return self.clues()[0]
+
+    def guess(self, answer):
+        """Guess the answer to the current clue. If wrong, returns
+        False. If right, removes the clue from self.clues(), stores a
+        Success object and returns True."""
+        c = self.current_clue()
+        if answer.lower() == c.answer.lower():
+            s = Success(hunt=self.hunt, team=self, clue=c)
+            s.put()
+            self.clue_keys.pop(0)
+            self.put()
+            return True
+        else:
+            return False
+
+class Success(db.Model):
+    """Every time a team gets the answer right, a Success is stored"""
+
+    hunt = db.ReferenceProperty(Hunt, collection_name='successes')
+    team = db.ReferenceProperty(Team, collection_name='successes')
+    clue = db.ReferenceProperty(Clue)
+    time = db.DateTimeProperty(auto_now_add=True)
