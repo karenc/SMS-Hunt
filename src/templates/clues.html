@@ -7,6 +7,23 @@
     </head>
     <body>
         <h1>Clues for {{ hunt_name }}</h1>
+        {% if started %}
+        <form action="" method="post">
+            <table>
+                <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                </tr>
+                {% for clue in clues %}
+                <tr>
+                    <td><input type="text" name="clue-{{ clue.key.id }}" value="{{ clue.question }}" /></td>
+                    <td><input type="text" name="clue-{{ clue.key.id }}" value="{{ clue.answer }}" /></td>
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Save clues" />
+        </form>
+        {% else %}
         <form action="" method="post">
             <table id="clues-list">
             </table>
@@ -14,9 +31,10 @@
             <input type="submit" id="clues-list-save" value="Save clues" />
         </form>
         <script type="text/javascript">
-            var clues = {{ clues|safe }};
+            var clues = {{ clues_json|safe }};
             var edit = new ListEdit(clues, 'clues-list', [
                 'Question', 'Answer'], ['question', 'answer']);
         </script>
+        {% endif %}
     </body>
 </html>

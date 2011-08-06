@@ -51,7 +51,9 @@ class Clues(webapp.RequestHandler):
         clues = list(Clue.all().filter('hunt =', hunt))
         self.response.out.write(utils.render('templates/clues.html', {
             'hunt_name': hunt.name,
-            'clues': json.dumps([{
+            'started': bool(hunt.started),
+            'clues': clues,
+            'clues_json': json.dumps([{
                 'id': clue.key().id(),
                 'question': clue.question,
                 'answer': clue.answer
