@@ -10,5 +10,7 @@ handlers:
   static_dir: static/images
 - url: /js
   static_dir: static/js
+- url: /rich
+  script: rich-testenv.py
 - url: /.*
   script: sms-hunt.py
