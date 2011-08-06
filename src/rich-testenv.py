@@ -42,9 +42,6 @@ print "Started: %s\n" % h.started
 print h.finished_teams()
 print h.outstanding_teams()
 
-print h.finished_teams()
-print h.outstanding_teams()
-
 print_clues(h)
 
 for t in h.teams:
