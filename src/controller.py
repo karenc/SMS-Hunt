@@ -107,6 +107,7 @@ class Clues(webapp.RequestHandler):
 
 
 class Teams(webapp.RequestHandler):
+    @utils.logged_in
     def get(self, hunt_id):
         hunt = get_hunt_by_id(hunt_id)
         if not hunt:
