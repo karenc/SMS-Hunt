@@ -8,6 +8,7 @@ class Hunt(db.Model):
 
     owner = db.UserProperty()
     name = db.StringProperty()
+    started = db.DateTimeProperty()
     
     def add_clue(self,q,a):
         """Add a new clue to this hunt."""
@@ -24,6 +25,7 @@ class Hunt(db.Model):
     def start(self):
         """Start the hunt! Set up the clues and send the first clue to
         each team."""
+        self.started = datetime.now()
         self.setup_clues()
 
     def setup_clues(self):

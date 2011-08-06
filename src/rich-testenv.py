@@ -32,7 +32,8 @@ def print_clues(hunt):
 print "Content-Type: text/plain\n"
 
 print "Hunt test!\n"
-print "Hunt name: %s\n" % h.name
+print "Hunt name: %s" % h.name
+print "Started: %s\n" % h.started
 
 print h.finished_teams()
 print h.outstanding_teams()
