@@ -1,3 +1,4 @@
+import logging
 import json
 import re
 
@@ -21,21 +22,21 @@ def parse_json_objs(objs, fields):
     try:
         objs = json.loads(objs)
     except ValueError:
-        print 'json parsing failed'
+        logging.warning('json parsing failed')
         return None
     if not isinstance(objs, list):
-        print 'objs is not a list'
+        logging.warning('objs is not a list')
         return None
     for obj in objs:
         if not isinstance(obj, dict):
-            print 'obj is not a dict'
+            logging.warning('obj is not a dict')
             return None
         for field in fields:
             if field not in obj:
-                print 'field missing from obj'
+                logging.warning('field missing from obj')
                 return None
             if not isinstance(obj[field], basestring):
-                print 'field in obj not a string'
+                logging.warning('field in obj not a string')
                 return None
     return objs
 
