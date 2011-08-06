@@ -11,4 +11,4 @@ handlers:
 - url: /js
   static_dir: static/js
 - url: /.*
-  script: flipbridge.py
+  script: sms-hunt.py
