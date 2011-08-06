@@ -8,27 +8,12 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import db
 import os
 from SMS import SendSMS, PollSMS
-
-def logged_in(func):
-    def _inner(self, *args, **kwargs):
-        self.user = users.get_current_user()
-        if not self.user:
-            self.redirect(users.create_login_url(self.request.uri))
-            return
-        return func(self, *args, **kwargs)
-    return _inner
+import utils
 
 class Index(webapp.RequestHandler):
     
+    @utils.logged_in
     def get(self):
-        user = users.get_current_user()
-
-        if user:
-            pass
-        else:
-            self.redirect(users.create_login_url(self.request.uri))
-            
-        
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, {}))
 
