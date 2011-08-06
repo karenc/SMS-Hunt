@@ -43,4 +43,12 @@ class PollSMS(webapp.RequestHandler):
     """Go and fetch smss from inbox"""
     
     def get(self):
-        """"""
+        """fetch from inbox"""
+        
+        url = "http://api.esendex.com/v1.0/Inbox/Messages"
+        encoded_username = base64.urlsafe_b64encode(account_settings['username']+':'+account_settings['password'])
+        
+        result = urlfetch.fetch(url=url, method=urlfetch.GET, headers={'Authorization' : "Basic %s" % (encoded_username)})
+
+        root = ElementTree.fromstring(result.content)
+        root.findall('{http://api.esendex.com/ns/}messageheader')
