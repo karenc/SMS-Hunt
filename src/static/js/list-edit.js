@@ -1,6 +1,7 @@
 function ListEdit(clues, elementId, headers, fields) {
     this.element = jQuery('#' + elementId);
     this.fields = fields;
+    this.hidden = jQuery('input[name=' + elementId + ']');
 
     var tr = jQuery('<tr></tr>').appendTo(this.element);
     var i;
@@ -11,6 +12,8 @@ function ListEdit(clues, elementId, headers, fields) {
     jQuery('<th>Delete</th>').appendTo(tr);
 
     this.render(clues);
+
+    jQuery('#' + elementId + '-save').click(this.addEventHandler('save'));
 }
 
 ListEdit.prototype.addEventHandler = function(handler) {
@@ -24,11 +27,11 @@ ListEdit.prototype.addEventHandler = function(handler) {
 ListEdit.prototype.renderClue = function(clue, action) {
     var tr = jQuery('<tr></tr>');
     var i;
-	var input;
+    var input;
 
     for (i = 0; i < this.fields.length; i++) {
         input = jQuery('<input type="text" />').val(clue[this.fields[i]]).appendTo(jQuery('<td></td>').appendTo(tr));
-		input.attr('name', this.fields[i]);
+        input.attr('name', this.fields[i]);
     }
 
     var button = jQuery('<input type="button" />').appendTo(jQuery('<td></td>').appendTo(tr));
@@ -44,27 +47,54 @@ ListEdit.prototype.render = function(clues) {
     for (i = 0; i < clues.length; i++) {
         this.element.append(this.renderClue(clues[i], 'Delete'));
     }
-	jQuery('.Delete').click(this.addEventHandler('deleteClue'));
+    jQuery('.Delete').click(this.addEventHandler('deleteClue'));
 
     this.element.append(this.renderClue({}, 'Create'));
     jQuery('.Create').click(this.addEventHandler('createClue'));
 };
 
 ListEdit.prototype.createClue = function(e, element) {
-	var tr = jQuery(element).parent().parent();
-	var i;
-	var clue = {};
-	var input;
-	for (i = 0; i < this.fields.length; i++) {
-		input = tr.find('input[name=' + this.fields[i] + ']');
-		clue[this.fields[i]] = input.val();
-		input.val('');
-	}
-	this.element.find('tr:last').before(this.renderClue(clue, 'Delete'));
-	jQuery('.Delete').click(this.addEventHandler('deleteClue'));
+    var tr = jQuery(element).parent().parent();
+    var i;
+    var clue = {};
+    var input;
+    for (i = 0; i < this.fields.length; i++) {
+        input = tr.find('input[name=' + this.fields[i] + ']');
+        clue[this.fields[i]] = input.val();
+        input.val('');
+    }
+    this.element.find('tr:last').before(this.renderClue(clue, 'Delete'));
+    jQuery('.Delete').click(this.addEventHandler('deleteClue'));
 }
 
 ListEdit.prototype.deleteClue = function(e, element) {
     var tr = jQuery(element).parent().parent();
     tr.remove();
+}
+
+ListEdit.prototype.save = function(e, element) {
+    e.preventDefault();
+    var i;
+    var j;
+    var trs = this.element.find('tr');
+    var results = [];
+    var obj;
+    var inputs;
+    var input;
+
+    for (i = 0; i < trs.length; i++) {
+        obj = {};
+        inputs = jQuery(trs[i]).find('input');
+        for (j = 0; j < inputs.length; j++) {
+            input = jQuery(inputs[j]);
+            if ((this.fields.indexOf(input.attr('name')) !== -1) && input.val()) {
+                obj[input.attr('name')] = input.val();
+            }
+        }
+        if (!jQuery.isEmptyObject(obj)) {
+            results.push(obj);
+        }
+    }
+    this.hidden.val(jQuery.toJSON(results));
+    this.element.parent().submit();
 }

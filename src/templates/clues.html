@@ -2,15 +2,21 @@
     <head>
         <title>Clues for {{ hunt_name }}</title>
         <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.json-2.2.js"></script>
         <script type="text/javascript" src="/js/list-edit.js"></script>
     </head>
     <body>
         <h1>Clues for {{ hunt_name }}</h1>
-        <table id="clues-list"></table>
+        <form action="" method="post">
+            <table id="clues-list">
+            </table>
+            <input type="hidden" name="clues-list" value="" />
+            <input type="submit" id="clues-list-save" value="Save clues" />
+        </form>
         <script type="text/javascript">
             var clues = {{ clues|safe }};
             var edit = new ListEdit(clues, 'clues-list', [
-                'Clue', 'Answer'], ['question', 'answer']);
+                'Question', 'Answer'], ['question', 'answer']);
         </script>
     </body>
 </html>
