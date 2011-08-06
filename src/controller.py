@@ -67,6 +67,15 @@ class ShowHunt(webapp.RequestHandler):
             return
         self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt}))
 
+    @utils.logged_in
+    def post(self, hunt_id):
+        hunt = get_hunt_by_id(hunt_id)
+        if not hunt:
+            self.redirect('/')
+            return
+        hunt.start()
+        self.redirect('/hunt/%s' % hunt.key().id())
+
 
 class Clues(webapp.RequestHandler):
     @utils.logged_in
