@@ -1,0 +1,9 @@
+#EsendexUsername
+#EsendexPassword
+#EsendexAccount
+
+account_settings = {
+    'username' : 'username@example',
+    'password' : 'password',
+    'account' : 'account',
+}
