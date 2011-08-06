@@ -8,7 +8,8 @@ import utils
 class Index(webapp.RequestHandler):
     @utils.logged_in
     def get(self):
-        self.response.out.write(utils.render('templates/index.html', {}))
+        hunts = list(Hunt.all().filter('owner =', self.user))
+        self.response.out.write(utils.render('templates/index.html', {'hunts': hunts}))
 
 
 class CreateHunt(webapp.RequestHandler):
@@ -17,7 +18,7 @@ class CreateHunt(webapp.RequestHandler):
         hunt_name = self.request.get('hunt-name')
         hunt = Hunt.all().filter('name =', hunt_name).get()
         if not hunt:
-            hunt = Hunt(name=hunt_name)
+            hunt = Hunt(name=hunt_name, owner=self.user)
             hunt.put()
         self.redirect('/hunt/%s' % hunt.key().id())
 
