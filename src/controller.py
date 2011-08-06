@@ -1,7 +1,7 @@
 import json
 
 from google.appengine.ext import webapp
-from Hunt import Hunt, Clue
+from Hunt import Hunt, Clue, Team
 
 import utils
 
@@ -104,3 +104,22 @@ class Clues(webapp.RequestHandler):
             for clue_dict in clues_list:
                 Clue(hunt=hunt, question=clue_dict['question'], answer=clue_dict['answer']).put()
         self.redirect('/hunt/%s/clues' % hunt.key().id())
+
+
+class Teams(webapp.RequestHandler):
+    def get(self, hunt_id):
+        hunt = get_hunt_by_id(hunt_id)
+        if not hunt:
+            self.redirect('/')
+            return
+        teams = list(Team.all().filter('hunt = ', hunt))
+        self.response.out.write(utils.render('templates/teams.html', {
+            'hunt_name': hunt.name,
+            'started': bool(hunt.started),
+            'teams': teams,
+            'teams_json': json.dumps([{
+                'id': team.key().id(),
+                'name': team.name,
+                'phone': team.phone,
+                } for team in teams]),
+            }))

@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Teams for {{ hunt_name }}</title>
+        <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.json-2.2.js"></script>
+        <script type="text/javascript" src="/js/list-edit.js"></script>
+    </head>
+    <body>
+        <h1>Teams for {{ hunt_name }}</h1>
+        {% if started %}
+        <form action="" method="post">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                </tr>
+                {% for team in teams %}
+                <tr>
+                    <td><input type="text" name="team-{{ team.key.id }}" value="{{ team.name }}" /></td>
+                    <td><input type="text" name="team-{{ team.key.id }}" value="{{ team.phone }}" /></td>
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Save teams" />
+        </form>
+        {% else %}
+        <form action="" method="post">
+            <table id="teams-list">
+            </table>
+            <input type="hidden" name="teams-list" value="" />
+            <input type="submit" id="teams-list-save" value="Save teams" />
+        </form>
+        <script type="text/javascript">
+            var teams = {{ teams_json|safe }};
+            var edit = new ListEdit(teams, 'teams-list', [
+                'Name', 'Phone Number'], ['name', 'phone']);
+        </script>
+        {% endif %}
+    </body>
+</html>
