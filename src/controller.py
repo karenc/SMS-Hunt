@@ -13,6 +13,30 @@ def get_hunt_by_id(hunt_id):
         return None
     return Hunt.get_by_id(hunt_id)
 
+def parse_json_objs(objs, fields):
+    '''Parse and validate a JSON object list'''
+    try:
+        objs = json.loads(objs)
+    except ValueError:
+        print 'json parsing failed'
+        return None
+    if not isinstance(objs, list):
+        print 'objs is not a list'
+        return None
+    for obj in objs:
+        if not isinstance(obj, dict):
+            print 'obj is not a dict'
+            return None
+        for field in fields:
+            if field not in obj:
+                print 'field missing from obj'
+                return None
+            if not isinstance(obj[field], basestring):
+                print 'field in obj not a string'
+                return None
+    return objs
+
+
 class Index(webapp.RequestHandler):
     @utils.logged_in
     def get(self):
@@ -62,34 +86,11 @@ class Clues(webapp.RequestHandler):
 
     @utils.logged_in
     def post(self, hunt_id):
-        def get_clues_list():
-            '''Parses and validates the clues-list JSON'''
-            try:
-                clues_list = json.loads(self.request.get('clues-list'))
-            except ValueError:
-                print 'json parsing failed'
-                return None
-            if not isinstance(clues_list, list):
-                print 'clues_list is not a list'
-                return None
-            for clue_dict in clues_list:
-                if not isinstance(clue_dict, dict):
-                    print 'clue_dict is not a dict'
-                    return None
-                for field in 'question', 'answer':
-                    if field not in clue_dict:
-                        print 'field missing from clue_dict'
-                        return None
-                    if not isinstance(clue_dict[field], basestring):
-                        print 'field in clue_dict not a string'
-                        return None
-            return clues_list
-
         hunt = get_hunt_by_id(hunt_id)
         if not hunt:
             self.redirect('/')
             return
-        clues_list = get_clues_list()
+        clues_list = parse_json_objs(self.request.get('clues-list'), ['question', 'answer'])
         if not clues_list:
             self.redirect('/')
             return
