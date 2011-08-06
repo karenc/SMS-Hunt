@@ -21,6 +21,11 @@ class Hunt(db.Model):
         t.put()
         return t
 
+    def start(self):
+        """Start the hunt! Set up the clues and send the first clue to
+        each team."""
+        self.setup_clues()
+
     def setup_clues(self):
         """Adds all clues to each team in a random order."""
         for t in self.teams:

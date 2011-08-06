@@ -16,7 +16,8 @@ h.add_team("Foo", "071234567")
 h.add_team("Bar", "072345678")
 h.add_team("Baz", "073456789")
 
-h.setup_clues()
+# Go!!
+h.start()
 
 def print_clues(hunt):
     for t in hunt.teams:
