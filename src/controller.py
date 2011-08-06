@@ -1,4 +1,5 @@
 from google.appengine.ext import webapp
+from Hunt import Hunt
 
 import utils
 
@@ -6,12 +7,25 @@ class CreateHunt(webapp.RequestHandler):
     @utils.logged_in
     def post(self):
         hunt_name = self.request.get('hunt-name')
-        self.redirect('/hunt/%s' % hunt_name)
+        hunt = Hunt.all().filter('name =', hunt_name).get()
+        if not hunt:
+            hunt = Hunt(name=hunt_name)
+            hunt.put()
+        self.redirect('/hunt/%s' % hunt.key().id())
 
 class ShowHunt(webapp.RequestHandler):
     @utils.logged_in
-    def get(self, name):
-        self.response.out.write('Hunt Name: %s' % name)
+    def get(self, hunt_id):
+        try:
+            hunt_id = int(hunt_id)
+        except ValueError:
+            self.redirect('/')
+            return
+        hunt = Hunt.get_by_id(hunt_id)
+        if not hunt:
+            self.redirect('/')
+            return
+        self.response.out.write('Hunt Name: %s' % hunt.name)
 
 class Clues(webapp.RequestHandler):
     @utils.logged_in
