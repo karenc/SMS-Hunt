@@ -3,6 +3,8 @@ from google.appengine.api import users
 import random
 from datetime import datetime
 import logging
+import SMS
+import re
 
 class Hunt(db.Model):
     """Parent object of each treasure hunt"""
@@ -28,7 +30,8 @@ class Hunt(db.Model):
         each team."""
         self.started = datetime.now()
         self.setup_clues()
-        self.put()
+        for t in self.teams:
+            t.send_clue('First clue: ')
 
     def setup_clues(self):
         """Adds all clues to each team in a random order."""
@@ -63,6 +66,22 @@ class Team(db.Model):
     # initially with reset_clues
     clue_keys    = db.ListProperty(int, default=[])
 
+    @classmethod
+    def find_by_phone(cls, p):
+        ts = cls.all().filter('phone =', p).fetch(1)
+        return ts[0] if ts else None
+
+    @classmethod
+    def deliver(cls, p, msg):
+        logging.debug("Asked to deliver '%s' to %s" % (msg, p))
+        team = cls.find_by_phone(p)
+        logging.debug("Found team: %s" % team.name)
+        if team:
+            return team.read_message(msg)
+        else:
+            # Er... message received from unknown number
+            return SMS.send(p, "Sorry... I don't know who you are!")
+
     def _reset_clues(self):
         """Populate clue_keys with a shuffled list of keys for the current clues. Should not be called publicly - use hunt.setup_clues()"""
         cids = [c.key().id() for c in self.hunt.clues]
@@ -86,8 +105,10 @@ class Team(db.Model):
             s = Success(hunt=self.hunt, team=self, clue=c)
             s.put()
             self._remove_clue()
+            self.send_clue("Awesome! Next: ")
             return True
         else:
+            SMS.send(self.phone, "Sorry; that's wrong!")
             return False
 
     def finished(self):
@@ -98,13 +119,36 @@ class Team(db.Model):
         """Quit the current clue permanently in order not to get
         stuck. No Success object is added."""
         self._remove_clue()
+        self.send_clue("Aww too bad! Next: ")
         return True
+
+    def send_clue(self, note=''):
+        """Send the current clue to the team by SMS, prepended by note."""
+        msg = note
+        if self.current_clue():
+            msg += self.current_clue().question
+        else:
+            msg += 'No more clues!'
+        result = SMS.send(self.phone, msg)
+        return True if result == 200 else False
+
+    def read_message(self, msg):
+        if re.search('^\s*pass\s*$', msg, re.I):
+            return self.pass_clue()
+
+        m = re.search('^\s*a\s*(.*?)\s*$', msg, re.I)
+        if m:
+            return self.guess(m.group(1))
+
+        # What's this?
+        SMS.send(self.phone, "I don't understand '%s'." % msg)
 
     def _remove_clue(self):
         """Internal method used by answer and pass_clue"""
         self.clue_keys.pop(0)
         if self.finished():
             self.finish_time = datetime.now()
+            result = SMS.send(self.phone, "You're finished! Return to base.")
         self.put()
         return True
 

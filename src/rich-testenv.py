@@ -46,7 +46,7 @@ print_clues(h)
 
 for t in h.teams:
     print "%s guesses 'PURPLE'" % t.name
-    result = t.guess("PURPLE")
+    result = Team.deliver(t.phone, "A PURPLE")
     print "Correct!" if result else "Wrong!"
     print ""
 
