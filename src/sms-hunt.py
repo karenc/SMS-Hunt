@@ -4,7 +4,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from SMS import SendSMS, PollSMS
-from hunt import CreateHunt, ShowHunt
+from hunt import CreateHunt, ShowHunt, Clues
 import utils
 
 class Index(webapp.RequestHandler):
@@ -19,6 +19,7 @@ Application = webapp.WSGIApplication(
      ('/send_sms', SendSMS),
      ('/poll_sms', PollSMS),
      ('/create-hunt', CreateHunt),
+     ('/hunt/(.*)/clues', Clues),
      ('/hunt/(.*)', ShowHunt),
      ],
     debug=True)
