@@ -53,7 +53,7 @@ class Clues(webapp.RequestHandler):
             'hunt_name': hunt.name,
             'clues': json.dumps([{
                 'id': clue.key().id(),
-                'clue': clue.question,
+                'question': clue.question,
                 'answer': clue.answer
                 } for clue in clues]),
             }))
