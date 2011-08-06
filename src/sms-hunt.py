@@ -4,16 +4,9 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from SMS import SendSMS, PollSMS
-from controller import CreateHunt, ShowHunt, Clues
+from controller import Index, CreateHunt, ShowHunt, Clues
 import utils
 
-class Index(webapp.RequestHandler):
-    
-    @utils.logged_in
-    def get(self):
-        self.response.out.write(utils.render('templates/index.html', {}))
-
-        
 Application = webapp.WSGIApplication(
     [('/', Index),
      ('/send_sms', SendSMS),

@@ -5,6 +5,12 @@ from Hunt import Hunt
 
 import utils
 
+class Index(webapp.RequestHandler):
+    @utils.logged_in
+    def get(self):
+        self.response.out.write(utils.render('templates/index.html', {}))
+
+
 class CreateHunt(webapp.RequestHandler):
     @utils.logged_in
     def post(self):
