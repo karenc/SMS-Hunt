@@ -8,6 +8,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from SMS import SendSMS, PollSMS
 from controller import Index, CreateHunt, ShowHunt, Clues, Teams
 import utils
+import logging
 
 Application = webapp.WSGIApplication(
     [('/', Index),
