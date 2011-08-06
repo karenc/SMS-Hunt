@@ -4,10 +4,13 @@
         <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="/js/jquery.json-2.2.js"></script>
         <script type="text/javascript" src="/js/list-edit.js"></script>
+        {% include "include-head.html" %}
     </head>
     <body>
+        {% include "header.html" %}
         <h1>Clues for {{ hunt_name }}</h1>
         {% if started %}
+        <div id="content">
         <form action="" method="post">
             <table>
                 <tr>
@@ -36,5 +39,6 @@
                 'Question', 'Answer'], ['question', 'answer']);
         </script>
         {% endif %}
+        </div>
     </body>
 </html>

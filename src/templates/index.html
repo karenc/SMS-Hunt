@@ -1,9 +1,12 @@
 <html>
     <head>
         <title>SMS Hunt</title>
+        {% include "include-head.html" %}
     </head>
     <body>
+        {% include "header.html" %}
         <h1>Welcome to SMS Hunt!</h1>
+        <div id="content">
         <div>
             <h2>Create a new Hunt:</h2>
             <form action="create-hunt" method="post">
@@ -19,6 +22,7 @@
                     <li><a href="/hunt/{{ hunt.key.id }}">{{ hunt.name }}</a></li>
                 {% endfor %}
             </ul>
+        </div>
         </div>
     </body>
 </html>

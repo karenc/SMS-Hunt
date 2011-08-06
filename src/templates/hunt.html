@@ -1,8 +1,11 @@
 <html>
     <head>
         <title>Hunt {{ hunt.name }}</title>
+        {% include "include-head.html" %}
     </head>
     <body>
+        {% include "header.html" %}
+        <div id="content">
         {% if hunt.started %}
             <p>Hunt has started!</p>
         {% else %}
@@ -15,5 +18,6 @@
             <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
         </div>
         <p>TODO: teams and clue completion status table</p>
+        </div>
     </body>
 </html>
