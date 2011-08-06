@@ -7,18 +7,21 @@
         {% include "header.html" %}
         <h1>{{ hunt.name }}</h1>
         <div id="content">
+        <div class="tabs">
+            <a class="active" href="/hunt/{{ hunt.key.id }}">Status</a>
+            <a href="/hunt/{{ hunt.key.id }}/clues">Clues</a>
+            <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
+        </div>
+        <div class="tab-content">
         {% if hunt.started %}
-            <p>Hunt has started!</p>
+            <h2>Hunt has started!</h2>
         {% else %}
             <form action="" method="post">
                 <input type="submit" value="Start hunt" />
             </form>
         {% endif %}
-        <div>
-            <a href="/hunt/{{ hunt.key.id }}/clues">Clues</a>
-            <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
-        </div>
         <p>TODO: teams and clue completion status table</p>
+        </div>
         </div>
     </body>
 </html>

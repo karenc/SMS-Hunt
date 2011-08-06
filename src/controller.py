@@ -87,6 +87,7 @@ class Clues(webapp.RequestHandler):
             return
         clues = list(Clue.all().filter('hunt =', hunt))
         self.response.out.write(utils.render('templates/clues.html', {
+            'hunt': hunt,
             'hunt_name': hunt.name,
             'started': bool(hunt.started),
             'clues': clues,
@@ -128,6 +129,7 @@ class Teams(webapp.RequestHandler):
             return
         teams = list(Team.all().filter('hunt = ', hunt))
         self.response.out.write(utils.render('templates/teams.html', {
+            'hunt': hunt,
             'hunt_name': hunt.name,
             'started': bool(hunt.started),
             'teams': teams,

@@ -10,6 +10,12 @@
         {% include "header.html" %}
         <h1>Clues for {{ hunt_name }}</h1>
         <div id="content">
+        <div class="tabs">
+            <a href="/hunt/{{ hunt.key.id }}">Status</a>
+            <a class="active" href="/hunt/{{ hunt.key.id }}/clues">Clues</a>
+            <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
+        </div>
+        <div class="tab-content">
         {% if started %}
         <form action="" method="post">
             <table>
@@ -39,6 +45,7 @@
                 'Question', 'Answer'], ['question', 'answer']);
         </script>
         {% endif %}
+        </div>
         </div>
     </body>
 </html>
