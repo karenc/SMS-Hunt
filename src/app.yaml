@@ -1,0 +1,14 @@
+application: sms-hunt
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /css
+  static_dir: static/css
+- url: /images
+  static_dir: static/images
+- url: /js
+  static_dir: static/js
+- url: /.*
+  script: flipbridge.py
