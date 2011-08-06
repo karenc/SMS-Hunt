@@ -1,4 +1,4 @@
-function ListEdit(clues, elementId, headers, fields) {
+function ListEdit(values, elementId, headers, fields) {
     this.element = jQuery('#' + elementId);
     this.fields = fields;
     this.hidden = jQuery('input[name=' + elementId + ']');
@@ -11,7 +11,7 @@ function ListEdit(clues, elementId, headers, fields) {
     }
     jQuery('<th>Delete</th>').appendTo(tr);
 
-    this.render(clues);
+    this.render(values);
 
     jQuery('#' + elementId + '-save').click(this.addEventHandler('save'));
 }
@@ -24,13 +24,13 @@ ListEdit.prototype.addEventHandler = function(handler) {
     return inner;
 }
 
-ListEdit.prototype.renderClue = function(clue, action) {
+ListEdit.prototype.renderValue = function(value, action) {
     var tr = jQuery('<tr></tr>');
     var i;
     var input;
 
     for (i = 0; i < this.fields.length; i++) {
-        input = jQuery('<input type="text" />').val(clue[this.fields[i]]).appendTo(jQuery('<td></td>').appendTo(tr));
+        input = jQuery('<input type="text" />').val(value[this.fields[i]]).appendTo(jQuery('<td></td>').appendTo(tr));
         input.attr('name', this.fields[i]);
     }
 
@@ -41,33 +41,33 @@ ListEdit.prototype.renderClue = function(clue, action) {
     return tr;
 };
 
-ListEdit.prototype.render = function(clues) {
+ListEdit.prototype.render = function(values) {
     var i;
 
-    for (i = 0; i < clues.length; i++) {
-        this.element.append(this.renderClue(clues[i], 'Delete'));
+    for (i = 0; i < values.length; i++) {
+        this.element.append(this.renderValue(values[i], 'Delete'));
     }
-    jQuery('.Delete').click(this.addEventHandler('deleteClue'));
+    jQuery('.Delete').click(this.addEventHandler('deleteValue'));
 
-    this.element.append(this.renderClue({}, 'Create'));
-    jQuery('.Create').click(this.addEventHandler('createClue'));
+    this.element.append(this.renderValue({}, 'Create'));
+    jQuery('.Create').click(this.addEventHandler('createValue'));
 };
 
-ListEdit.prototype.createClue = function(e, element) {
+ListEdit.prototype.createValue = function(e, element) {
     var tr = jQuery(element).parent().parent();
     var i;
-    var clue = {};
+    var value = {};
     var input;
     for (i = 0; i < this.fields.length; i++) {
         input = tr.find('input[name=' + this.fields[i] + ']');
-        clue[this.fields[i]] = input.val();
+        value[this.fields[i]] = input.val();
         input.val('');
     }
-    this.element.find('tr:last').before(this.renderClue(clue, 'Delete'));
-    jQuery('.Delete').click(this.addEventHandler('deleteClue'));
+    this.element.find('tr:last').before(this.renderValue(value, 'Delete'));
+    jQuery('.Delete').click(this.addEventHandler('deleteValue'));
 }
 
-ListEdit.prototype.deleteClue = function(e, element) {
+ListEdit.prototype.deleteValue = function(e, element) {
     var tr = jQuery(element).parent().parent();
     tr.remove();
 }
