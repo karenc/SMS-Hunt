@@ -1,4 +1,11 @@
 from google.appengine.ext import webapp
+from local_settings import account_settings
+import os
 
 class SendSMS(webapp.RequestHandler):
-    pass
+    
+    def get(self):
+        """Show form to send sms"""
+        
+        path = os.path.join(os.path.dirname(__file__), 'templates/send_sms.html')
+        self.response.out.write(template.render(path, {}))        
