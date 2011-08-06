@@ -17,11 +17,26 @@
         </div>
         <div>
             <h2>Your Hunts:</h2>
-            <ul>
+            <table>
+                <tr>
+                    <th style="width: 130px">Hunt Name</th>
+                    <th style="width: 130px">Status</th>
+                </tr>
                 {% for hunt in hunts %}
-                    <li><a href="/hunt/{{ hunt.key.id }}">{{ hunt.name }}</a></li>
+                <tr>
+                    <td style="text-align: center"><a href="/hunt/{{ hunt.key.id }}">{{ hunt.name }}</a></td>
+                    <td style="text-align: center">
+                        {% if hunt.started %}
+                            Hunt started!
+                        {% else %}
+                            <form action="/hunt/{{ hunt.key.id }}" method="post">
+                                <input type="submit" value="Start hunt" />
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
-            </ul>
+            </table>
         </div>
         </div>
     </body>
