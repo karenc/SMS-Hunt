@@ -27,6 +27,7 @@ class Hunt(db.Model):
         each team."""
         self.started = datetime.now()
         self.setup_clues()
+        self.put()
 
     def setup_clues(self):
         """Adds all clues to each team in a random order."""
