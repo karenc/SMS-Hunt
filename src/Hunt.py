@@ -1,6 +1,7 @@
 from google.appengine.ext import db
 from google.appengine.api import users
 import random
+from datetime import datetime
 
 class Hunt(db.Model):
     """Parent object of each treasure hunt"""
@@ -20,6 +21,14 @@ class Hunt(db.Model):
         t.put()
         return t
 
+    def finished_teams(self):
+        """Returns all teams that have finished."""
+        return filter(lambda t: t.finished(), self.teams)
+
+    def outstanding_teams(self):
+        """Returns all teams that have not finished yet."""
+        return filter(lambda t: not t.finished(), self.teams)
+
 class Clue(db.Model):
     """Each treasure hunt has multiple clues, each with a question and
     an answer."""
@@ -34,6 +43,7 @@ class Team(db.Model):
     hunt     = db.ReferenceProperty(Hunt, collection_name='teams')
     name     = db.StringProperty()
     phone    = db.StringProperty()
+    finish_time = db.DateTimeProperty()
 
     # This is the full list of remaining clues for this team. Populate
     # initially with reset_clues
@@ -51,7 +61,7 @@ class Team(db.Model):
 
     def current_clue(self):
         """Get the current clue this team must solve"""
-        return self.clues()[0]
+        return self.clues()[0] if self.clues() else None
 
     def guess(self, answer):
         """Guess the answer to the current clue. If wrong, returns
@@ -61,11 +71,28 @@ class Team(db.Model):
         if answer.lower() == c.answer.lower():
             s = Success(hunt=self.hunt, team=self, clue=c)
             s.put()
-            self.clue_keys.pop(0)
-            self.put()
+            self._remove_clue()
             return True
         else:
             return False
+
+    def finished(self):
+        """Returns a boolean to say if team has finished or not."""
+        return not self.clue_keys
+
+    def pass_clue(self):
+        """Quit the current clue permanently in order not to get
+        stuck. No Success object is added."""
+        self._remove_clue()
+        return True
+
+    def _remove_clue(self):
+        """Internal method used by answer and pass_clue"""
+        self.clue_keys.pop(0)
+        if self.finished():
+            self.finish_time = datetime.now()
+        self.put()
+        return True
 
 class Success(db.Model):
     """Every time a team gets the answer right, a Success is stored"""

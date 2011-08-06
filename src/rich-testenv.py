@@ -7,9 +7,9 @@ h.put()
 
 # Add some clues to the hunt
 h.add_clue("Chair colour", "purple")
-h.add_clue("Hotel name", "Mint")
-h.add_clue("#leeds____?", "hack")
-h.add_clue("Rich's Twitter name", "pedantic_git")
+#h.add_clue("Hotel name", "Mint")
+#h.add_clue("#leeds____?", "hack")
+#h.add_clue("Rich's Twitter name", "pedantic_git")
 
 # Add some teams
 h.add_team("Foo", "071234567").reset_clues()
@@ -23,13 +23,16 @@ def print_clues(hunt):
         for c in t.clues():
             print "  - %s" % c.question
         print ""
-        print "Current clue: %s" % t.current_clue().question
+        print "Current clue: %s" % (t.current_clue().question if t.current_clue() else "None")
         print ""
 
 print "Content-Type: text/plain\n"
 
 print "Hunt test!\n"
 print "Hunt name: %s\n" % h.name
+
+print h.finished_teams()
+print h.outstanding_teams()
 
 print_clues(h)
 
@@ -43,3 +46,6 @@ print_clues(h)
 
 for s in h.successes:
     print "Success: %s for clue '%s' at %s" % (s.team.name, s.clue.question, s.time)
+
+print h.finished_teams()
+print h.outstanding_teams()
