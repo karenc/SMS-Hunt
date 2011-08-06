@@ -3,6 +3,7 @@ from local_settings import account_settings
 import os, urllib
 from google.appengine.ext.webapp import template
 from google.appengine.api import urlfetch
+import base64
 
 class SendSMS(webapp.RequestHandler):
     
@@ -20,21 +21,11 @@ class SendSMS(webapp.RequestHandler):
 
         if recipient and message:
             
-            url = 'https://www.esendex.com/secure/messenger/formpost/SendSMS.aspx'
+            url = 'http://api.esendex.com/v1.0/messagedispatcher'
+            encoded_username = base64.urlsafe_b64encode(account_settings['username']+':'+account_settings['password'])
             
-            form_fields = {
-                'EsendexUsername' : account_settings['username'],
-                'EsendexPassword' : account_settings['password'],
-                'EsendexAccount' : account_settings['account'],
-                'EsendexRecipient' : recipient,
-                'EsendexBody' : message,
-                }
-            form_data = urllib.urlencode(form_fields)
-            
-            result = urlfetch.fetch(url=url, 
-                                    method=urlfetch.POST, 
-                                    payload=form_data, 
-                                    headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            xml = """<?xml version='1.0' encoding='UTF-8'?><messages><accountreference>%s</accountreference><message><to>%s</to><body>%s</body></message></messages>""" % (account_settings['account'], recipient, message)  
+            result = urlfetch.fetch(url=url, method=urlfetch.POST, payload=xml, headers={'Content-Type' : 'text/xml', 'Authorization' : "Basic %s" % (encoded_username[:-1])})
         
         path = os.path.join(os.path.dirname(__file__), 'templates/sent_sms.html')
         self.response.out.write(template.render(path, {}))   
