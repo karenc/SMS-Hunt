@@ -59,3 +59,47 @@ class Clues(webapp.RequestHandler):
                 'answer': clue.answer
                 } for clue in clues]),
             }))
+
+    @utils.logged_in
+    def post(self, hunt_id):
+        def get_clues_list():
+            '''Parses and validates the clues-list JSON'''
+            try:
+                clues_list = json.loads(self.request.get('clues-list'))
+            except ValueError:
+                print 'json parsing failed'
+                return None
+            if not isinstance(clues_list, list):
+                print 'clues_list is not a list'
+                return None
+            for clue_dict in clues_list:
+                if not isinstance(clue_dict, dict):
+                    print 'clue_dict is not a dict'
+                    return None
+                for field in 'question', 'answer':
+                    if field not in clue_dict:
+                        print 'field missing from clue_dict'
+                        return None
+                    if not isinstance(clue_dict[field], basestring):
+                        print 'field in clue_dict not a string'
+                        return None
+            return clues_list
+
+        hunt = get_hunt_by_id(hunt_id)
+        if not hunt:
+            self.redirect('/')
+            return
+        clues_list = get_clues_list()
+        if not clues_list:
+            self.redirect('/')
+            return
+        if hunt.started:
+            # TODO update existing clues
+            pass
+        else:
+            for clue in Clue.all().filter('hunt =', hunt):
+                clue.delete()
+
+            for clue_dict in clues_list:
+                Clue(hunt=hunt, question=clue_dict['question'], answer=clue_dict['answer']).put()
+        self.redirect('/hunt/%s/clues' % hunt.key().id())
