@@ -26,7 +26,7 @@ class Index(webapp.RequestHandler):
         
 Application = webapp.WSGIApplication(
     [('/', Index),
-     ('send_sms', SendSMS)
+     ('/send_sms', SendSMS)
      ],
     debug=True)
 
