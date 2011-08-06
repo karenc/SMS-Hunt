@@ -8,6 +8,7 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import db
 import os
 from SMS import SendSMS, PollSMS
+from hunt import CreateHunt, ShowHunt
 import utils
 
 class Index(webapp.RequestHandler):
@@ -22,6 +23,8 @@ Application = webapp.WSGIApplication(
     [('/', Index),
      ('/send_sms', SendSMS),
      ('/poll_sms', PollSMS),
+     ('/create-hunt', CreateHunt),
+     ('/hunt/(.*)', ShowHunt),
      ],
     debug=True)
 
