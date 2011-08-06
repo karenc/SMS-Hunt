@@ -65,7 +65,7 @@ class ShowHunt(webapp.RequestHandler):
         if not hunt:
             self.redirect('/')
             return
-        self.response.out.write('Hunt Name: %s' % hunt.name)
+        self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt}))
 
 
 class Clues(webapp.RequestHandler):

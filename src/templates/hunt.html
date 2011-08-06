@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Hunt {{ hunt.name }}</title>
+    </head>
+    <body>
+        {% if hunt.started %}
+            <p>Hunt has started!</p>
+        {% else %}
+            <form action="" method="post">
+                <input type="submit" value="Start hunt" />
+            </form>
+        {% endif %}
+        <div>
+            <a href="/hunt/{{ hunt.key.id }}/clues">Clues</a>
+            <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
+        </div>
+        <p>TODO: teams and clue completion status table</p>
+    </body>
+</html>
