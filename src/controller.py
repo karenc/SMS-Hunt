@@ -1,9 +1,12 @@
 import json
+import re
 
 from google.appengine.ext import webapp
-from Hunt import Hunt, Clue, Team
 
+from Hunt import Hunt, Clue, Team
 import utils
+
+PHONE_NUMBER_RE = re.compile(r'^\d+$')
 
 def get_hunt_by_id(hunt_id):
     '''Fetch the hunt given an id string'''
@@ -124,3 +127,27 @@ class Teams(webapp.RequestHandler):
                 'phone': team.phone,
                 } for team in teams]),
             }))
+
+    @utils.logged_in
+    def post(self, hunt_id):
+        hunt = get_hunt_by_id(hunt_id)
+        if not hunt:
+            self.redirect('/')
+            return
+        teams_list = parse_json_objs(self.request.get('teams-list'), ['name', 'phone'])
+        if not teams_list:
+            self.redirect('/')
+            return
+        if not all(PHONE_NUMBER_RE.match(team['phone']) for team in teams_list):
+            self.redirect('/')
+            return
+        if hunt.started:
+            # TODO update existing teams
+            pass
+        else:
+            for team in Team.all().filter('hunt =', hunt):
+                team.delete()
+
+            for team_dict in teams_list:
+                Team(hunt=hunt, name=team_dict['name'], phone=team_dict['phone']).put()
+        self.redirect('/hunt/%s/teams' % hunt.key().id())
