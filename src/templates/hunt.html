@@ -20,7 +20,24 @@
                 <input type="submit" value="Start hunt" />
             </form>
         {% endif %}
-        <p>TODO: teams and clue completion status table</p>
+        <div>
+            <a href="/hunt/{{ hunt.key.id }}/clues">Clues</a>
+            <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
+        </div>
+        <table>
+            <tr><th>Question/Team</th>
+                {% for team in hunt.teams %}
+                    <th>{{ team.name }}</th>
+                {% endfor %}
+            </tr>
+            {% for answer_set in answer_sets %}
+                <tr><td>{{ answer_set.question }}</td>
+                    {% for answer in answer_set.answers %}
+                        <td>{% if answer %}X{% endif %}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
         </div>
         </div>
     </body>

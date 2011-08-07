@@ -66,7 +66,18 @@ class ShowHunt(webapp.RequestHandler):
         if not hunt:
             self.redirect('/')
             return
-        self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt}))
+        answer_sets = []
+        for clue in hunt.clues:
+            if hunt.started:
+                answers = [not team.has_clue_left(clue) for team in hunt.teams]
+            else:
+                answers = [False for team in hunt.teams]
+            answer_sets.append({
+                'question': clue.question,
+                'answers': answers,
+            })
+        logging.debug('ShowHunt answer_sets: %s' % answer_sets)
+        self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt, 'answer_sets': answer_sets}))
 
     @utils.logged_in
     def post(self, hunt_id):
