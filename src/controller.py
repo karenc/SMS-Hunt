@@ -52,7 +52,7 @@ class CreateHunt(webapp.RequestHandler):
     @utils.logged_in
     def post(self):
         hunt_name = self.request.get('hunt-name')
-        hunt = Hunt.all().filter('name =', hunt_name).get()
+        hunt = Hunt.all().filter('name =', hunt_name).filter('owner =', self.user).get()
         if not hunt:
             hunt = Hunt(name=hunt_name, owner=self.user)
             hunt.put()
