@@ -4,7 +4,7 @@ use_library('django', '1.2')
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from SMS import SendSMS, PollSMS
+from SMS import SendSMS, PollSMS, AnswerHandler
 from controller import Index, CreateHunt, ShowHunt, Clues, Teams
 import utils
 import logging
@@ -17,6 +17,7 @@ Application = webapp.WSGIApplication(
      ('/hunt/(.*)/clues', Clues),
      ('/hunt/(.*)/teams', Teams),
      ('/hunt/(.*)', ShowHunt),
+     ('/answer-handler', AnswerHandler),
      ],
     debug=True)
 

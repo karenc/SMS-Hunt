@@ -6,6 +6,7 @@ from google.appengine.api import urlfetch
 import base64
 from xml.etree import ElementTree
 import logging
+from Hunt import *
 
 def send(recipient, message):
     """Send this message to the specified recipient. Returns an HTTP
@@ -20,7 +21,22 @@ def send(recipient, message):
     xml = """<?xml version='1.0' encoding='UTF-8'?><messages><accountreference>%s</accountreference><message><to>%s</to><body>%s</body></message></messages>""" % (account_settings['account'], recipient, message)  
     result = urlfetch.fetch(url=url, method=urlfetch.POST, payload=xml, headers={'Content-Type' : 'text/xml', 'Authorization' : "Basic %s" % (encoded_username)})
     return result.status_code
-    
+
+class AnswerHandler(webapp.RequestHandler):
+
+    def post(self):
+        body = self.request.body
+        m = re.search('<MessageText>(.*?)</MessageText>')
+        msg = m.group(1)
+        m = re.search('<From>44(\d+)</From>')
+        number_without_zero = m.group(1)
+
+        if msg and number_without_zero:
+            Team.deliver("0%s" % number_without_zero, msg)
+            self.response.out.write("Delivered to app!")
+        else:
+            self.response.set_status(500)
+            self.response.out.write("WTF Esendex?")
 
 class SendSMS(webapp.RequestHandler):
     
