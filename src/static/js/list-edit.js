@@ -9,7 +9,6 @@ function ListEdit(values, elementId, headers, fields) {
         var th = jQuery('<th></th>').appendTo(tr);
         th.text(headers[i]);
     }
-    jQuery('<th>Delete</th>').appendTo(tr);
 
     this.render(values);
 
@@ -49,11 +48,11 @@ ListEdit.prototype.render = function(values) {
     }
     jQuery('.Delete').click(this.addEventHandler('deleteValue'));
 
-    this.element.append(this.renderValue({}, 'Create'));
-    jQuery('.Create').click(this.addEventHandler('createValue'));
+    this.element.append(this.renderValue({}, 'Add'));
+    jQuery('.Add').click(this.addEventHandler('addValue'));
 };
 
-ListEdit.prototype.createValue = function(e, element) {
+ListEdit.prototype.addValue = function(e, element) {
     var tr = jQuery(element).parent().parent();
     var i;
     var value = {};
