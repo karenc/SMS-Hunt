@@ -166,11 +166,7 @@ class Team(db.Model):
         """Process an incoming text for this team. 'pass' or '<answer>'"""
         if re.search('^\s*pass\s*$', msg, re.I):
             return self.pass_clue()
-
         return self.guess(msg)
-
-        # What's this?
-        SMS.send(self.phone, "I don't understand '%s'." % msg)
 
     def _remove_clue(self):
         """Internal method used by answer and pass_clue"""
