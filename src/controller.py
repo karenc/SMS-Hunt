@@ -93,7 +93,7 @@ class ShowHunt(webapp.RequestHandler):
             if team.remaining():
                 progresses.append('%d left' % team.remaining())
             else:
-                progresses.append(str(team.finish_time))
+                progresses.append(team.finish_time.strftime('%H:%M'))
 
         logging.debug('ShowHunt answer_sets: %s' % answer_sets)
         self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt, 'answer_sets': answer_sets, 'scores': scores, 'progresses': progresses}))
