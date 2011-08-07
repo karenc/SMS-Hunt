@@ -67,10 +67,10 @@ class ShowHunt(webapp.RequestHandler):
             if t.has_clue_left(c):
                 return ' '
             elif t.correctly_answered(c):
-                return 'X'
+                return 'Yes'
             else:
-                return 'P'
-        
+                return 'Pass'
+
         hunt = get_hunt_by_id(hunt_id)
         if not hunt:
             self.redirect('/')
