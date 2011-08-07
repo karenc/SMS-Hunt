@@ -62,6 +62,15 @@ class CreateHunt(webapp.RequestHandler):
 class ShowHunt(webapp.RequestHandler):
     @utils.logged_in
     def get(self, hunt_id):
+
+        def answer_letter(t,c):
+            if t.has_clue_left(c):
+                return ' '
+            elif t.correctly_answered(c):
+                return 'X'
+            else:
+                return 'P'
+        
         hunt = get_hunt_by_id(hunt_id)
         if not hunt:
             self.redirect('/')
@@ -69,9 +78,9 @@ class ShowHunt(webapp.RequestHandler):
         answer_sets = []
         for clue in hunt.clues:
             if hunt.started:
-                answers = [not team.has_clue_left(clue) for team in hunt.teams]
+                answers = [answer_letter(team,clue) for team in hunt.teams]
             else:
-                answers = [False for team in hunt.teams]
+                answers = [' ' for team in hunt.teams]
             answer_sets.append({
                 'question': clue.question,
                 'answers': answers,

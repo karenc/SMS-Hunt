@@ -29,7 +29,7 @@
             {% for answer_set in answer_sets %}
                 <tr><td>{{ answer_set.question }}</td>
                     {% for answer in answer_set.answers %}
-                        <td>{% if answer %}X{% endif %}</td>
+                        <td>{{ answer }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
