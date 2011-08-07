@@ -39,6 +39,7 @@ class Hunt(db.Model):
         self.put()
         self.setup_clues()
         for t in self.teams:
+            logging.debug("Clues for team %s: %s" % (t.name, [c.question for c in t.clues()]))
             t.send_clue('First clue: ')
 
     def setup_clues(self):
@@ -143,6 +144,10 @@ class Team(db.Model):
     def has_clue_left(self, c):
         """Returns true if team has given clue left to answer."""
         return c.key().id() in self.clue_keys
+
+    def correctly_answered(self, c):
+        """Returns true if team correctly answered given clue."""
+        return bool(Success.all().filter('team =', self).filter('clue =', c).fetch(1))
 
     def pass_clue(self):
         """Quit the current clue permanently in order not to get

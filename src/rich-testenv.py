@@ -34,6 +34,7 @@ def print_clues(hunt):
         print "Remaining clues: %d" % t.remaining()
         print "Score: %d" % t.score()
         print "Has chair clue? %s" % t.has_clue_left(chair)
+        print "Correctly answered chair clue? %s" % t.correctly_answered(chair)
         print ""
 
 print "Content-Type: text/plain\n"
@@ -49,7 +50,7 @@ print_clues(h)
 
 for t in h.teams:
     print "%s guesses 'PURPLE'" % t.name
-    result = Team.deliver(t.phone, "A PURPLE")
+    result = Team.deliver(t.phone, "PURPLE")
     print "Correct!" if result else "Wrong!"
     print ""
 
