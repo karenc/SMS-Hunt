@@ -10,7 +10,7 @@ h = Hunt(name="Test hunt")
 h.put()
 
 # Add some clues to the hunt
-h.add_clue("Chair colour", "purple")
+chair = h.add_clue("Chair colour", "purple")
 h.add_clue("Hotel name", "Mint")
 h.add_clue("#leeds____?", "hack")
 h.add_clue("Rich's Twitter name", "pedantic_git")
@@ -31,6 +31,9 @@ def print_clues(hunt):
             print "  - %s" % c.question
         print ""
         print "Current clue: %s" % (t.current_clue().question if t.current_clue() else "None")
+        print "Remaining clues: %d" % t.remaining()
+        print "Score: %d" % t.score()
+        print "Has chair clue? %s" % t.has_clue_left(chair)
         print ""
 
 print "Content-Type: text/plain\n"

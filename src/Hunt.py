@@ -75,11 +75,15 @@ class Team(db.Model):
 
     @classmethod
     def find_by_phone(cls, p):
+        """Class method to find a team by phone number. There should
+        only be one... otherwise bad things happen!"""
         ts = cls.all().filter('phone =', p).fetch(1)
         return ts[0] if ts else None
 
     @classmethod
     def deliver(cls, p, msg):
+        """Given a phone number and a message, deliver the message to
+        the appropriate team's read_message() method."""
         logging.debug("Asked to deliver '%s' to %s" % (msg, p))
         team = cls.find_by_phone(p)
         logging.debug("Found team: %s" % team.name)
@@ -97,6 +101,7 @@ class Team(db.Model):
         self.put()
 
     def clues(self):
+        """Clue objects remaining to be answered by this team."""
         return [Clue.get_by_id(id) for id in self.clue_keys]
 
     def current_clue(self):
@@ -122,6 +127,21 @@ class Team(db.Model):
         """Returns a boolean to say if team has finished or not."""
         return not self.clue_keys
 
+    def score(self):
+        """Returns the number of successes this team has had."""
+        s = list(self.successes)
+        return len(s)
+
+    def remaining(self):
+        """Returns the number of clues this team has left to
+        solve. May not be total - finished because of passes."""
+        c = list(self.clue_keys)
+        return len(c)
+
+    def has_clue_left(self, c):
+        """Returns true if team has given clue left to answer."""
+        return c.key().id() in self.clue_keys
+
     def pass_clue(self):
         """Quit the current clue permanently in order not to get
         stuck. No Success object is added."""
@@ -140,6 +160,7 @@ class Team(db.Model):
         return True if result == 200 else False
 
     def read_message(self, msg):
+        """Process an incoming text for this team. 'pass' or 'a <answer>'"""
         if re.search('^\s*pass\s*$', msg, re.I):
             return self.pass_clue()
 
