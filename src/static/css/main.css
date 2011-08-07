@@ -61,22 +61,30 @@ FORM {
 
 .tabs A {
     text-decoration: none;
-    padding: 5px 10px;
+    padding: 5px 25px;
     background-color: #9BE;
     border: 2px solid #9BE;
     margin-right: 5px;
     font-size: 15px;
+    -moz-border-radius-topright: 15px;
+    -moz-border-radius-topleft: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
 }
 
 .tabs A.active {
     background-color: white;
-    border: 0;
+    border: 2px solid #9BE;
+    border-bottom: 0;
+    -moz-border-radius-topright: 15px;
+    -moz-border-radius-topleft: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
 }
 
 .tab-content {
     margin: 5px 0;
     padding: 10px 5px;
-    border-top: 2px solid #9BE;
 }
 
 TABLE {
