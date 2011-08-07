@@ -36,6 +36,7 @@ class Hunt(db.Model):
         """Start the hunt! Set up the clues and send the first clue to
         each team."""
         self.started = datetime.now()
+        self.put()
         self.setup_clues()
         for t in self.teams:
             t.send_clue('First clue: ')
