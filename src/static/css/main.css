@@ -78,3 +78,15 @@ FORM {
     padding: 10px 5px;
     border-top: 2px solid #9BE;
 }
+
+TABLE {
+    margin: 20px 0;
+}
+
+TH, TD {
+    padding: 5px 8px;
+}
+
+TR.even {
+    background-color: #ACE;
+}

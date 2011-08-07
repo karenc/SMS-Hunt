@@ -20,11 +20,7 @@
                 <input type="submit" value="Start hunt" />
             </form>
         {% endif %}
-        <div>
-            <a href="/hunt/{{ hunt.key.id }}/clues">Clues</a>
-            <a href="/hunt/{{ hunt.key.id }}/teams">Teams</a>
-        </div>
-        <table>
+        <table class="with-color">
             <tr><th>Question/Team</th>
                 {% for team in hunt.teams %}
                     <th>{{ team.name }}</th>
