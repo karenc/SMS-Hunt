@@ -90,7 +90,9 @@ class ShowHunt(webapp.RequestHandler):
         progresses = []
         for team in hunt.teams:
             scores.append(team.score())
-            if team.remaining():
+            if not hunt.started:
+                progresses.append('')
+            elif team.remaining():
                 progresses.append('%d left' % team.remaining())
             else:
                 progresses.append(team.finish_time.strftime('%H:%M'))
