@@ -26,9 +26,9 @@ class AnswerHandler(webapp.RequestHandler):
 
     def post(self):
         body = self.request.body
-        m = re.search('<MessageText>(.*?)</MessageText>')
+        m = re.search('<MessageText>(.*?)</MessageText>', body)
         msg = m.group(1)
-        m = re.search('<From>44(\d+)</From>')
+        m = re.search('<From>44(\d+)</From>', body)
         number_without_zero = m.group(1)
 
         if msg and number_without_zero:

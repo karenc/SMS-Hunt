@@ -118,7 +118,8 @@ class Team(db.Model):
             s = Success(hunt=self.hunt, team=self, clue=c)
             s.put()
             self._remove_clue()
-            self.send_clue("Awesome! Next: ")
+            if self.clue_keys:
+                self.send_clue("Awesome! Next: ")
             return True
         else:
             SMS.send(self.phone, "Sorry; that's wrong!")
@@ -147,7 +148,8 @@ class Team(db.Model):
         """Quit the current clue permanently in order not to get
         stuck. No Success object is added."""
         self._remove_clue()
-        self.send_clue("Aww too bad! Next: ")
+        if self.clue_keys:
+            self.send_clue("Aww too bad! Next: ")
         return True
 
     def send_clue(self, note=''):
@@ -161,13 +163,11 @@ class Team(db.Model):
         return True if result == 200 else False
 
     def read_message(self, msg):
-        """Process an incoming text for this team. 'pass' or 'a <answer>'"""
+        """Process an incoming text for this team. 'pass' or '<answer>'"""
         if re.search('^\s*pass\s*$', msg, re.I):
             return self.pass_clue()
 
-        m = re.search('^\s*a\s*(.*?)\s*$', msg, re.I)
-        if m:
-            return self.guess(m.group(1))
+        return self.guess(msg)
 
         # What's this?
         SMS.send(self.phone, "I don't understand '%s'." % msg)
