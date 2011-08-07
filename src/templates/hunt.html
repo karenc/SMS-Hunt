@@ -33,6 +33,16 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
+            <tr><td>Score</td>
+                {% for score in scores %}
+                    <td>{{ score }}</td>
+                {% endfor %}
+            </tr>
+            <tr><td>Team progress</td>
+                {% for progress in progresses %}
+                    <td>{{ progress }}</td>
+                {% endfor %}
+            </tr>
         </table>
         </div>
         </div>

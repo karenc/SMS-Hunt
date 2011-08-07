@@ -76,8 +76,18 @@ class ShowHunt(webapp.RequestHandler):
                 'question': clue.question,
                 'answers': answers,
             })
+
+        scores = []
+        progresses = []
+        for team in hunt.teams:
+            scores.append(team.score())
+            if team.remaining():
+                progresses.append('%d left' % team.remaining())
+            else:
+                progresses.append(str(team.finish_time))
+
         logging.debug('ShowHunt answer_sets: %s' % answer_sets)
-        self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt, 'answer_sets': answer_sets}))
+        self.response.out.write(utils.render('templates/hunt.html', {'hunt': hunt, 'answer_sets': answer_sets, 'scores': scores, 'progresses': progresses}))
 
     @utils.logged_in
     def post(self, hunt_id):
