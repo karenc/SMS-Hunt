@@ -127,7 +127,7 @@ class Clues(webapp.RequestHandler):
                 clue.delete()
 
             for clue_dict in clues_list:
-                Clue(hunt=hunt, question=clue_dict['question'], answer=clue_dict['answer']).put()
+                hunt.add_clue(clue_dict['question'], clue_dict['answer'])
         self.redirect('/hunt/%s/clues' % hunt.key().id())
 
 
@@ -172,5 +172,5 @@ class Teams(webapp.RequestHandler):
                 team.delete()
 
             for team_dict in teams_list:
-                Team(hunt=hunt, name=team_dict['name'], phone=team_dict['phone']).put()
+                hunt.add_team(team_dict['name'], team_dict['phone'])
         self.redirect('/hunt/%s/teams' % hunt.key().id())
