@@ -21,6 +21,13 @@ class Hunt(db.Model):
 
     def add_team(self,n,p):
         """Add a new team to this hunt."""
+        # Check if there's a team already with this number - if so,
+        # null its phone number.
+        old = Team.find_by_phone(p)
+        if old:
+            logging.warn("Found old team in hunt '%s' with this number. Blanking number!" % old.hunt.name)
+            old.phone = None
+            old.put()
         t = Team(hunt=self,name=n,phone=p,clue_keys=[])
         t.put()
         return t
