@@ -3,6 +3,7 @@ import simplejson as json
 import re
 
 from google.appengine.ext import webapp
+from google.appengine.api import users
 
 from Hunt import Hunt, Clue, Team
 import utils
@@ -42,15 +43,17 @@ def parse_json_objs(objs, fields):
 
 
 class Index(webapp.RequestHandler):
-    @utils.logged_in
     def get(self):
-        hunts = list(Hunt.all().filter('owner =', self.user))
+        user = users.get_current_user()
+        hunts = []
+        if user:
+            hunts = list(Hunt.all().filter('owner =', user))
         self.response.out.write(utils.render('templates/index.html', {'hunts': hunts}))
 
 
 class CreateHunt(webapp.RequestHandler):
     @utils.logged_in
-    def post(self):
+    def get(self):
         hunt_name = self.request.get('hunt-name')
         hunt = Hunt.all().filter('name =', hunt_name).filter('owner =', self.user).get()
         if not hunt:

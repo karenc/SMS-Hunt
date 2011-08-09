@@ -9,12 +9,13 @@
         <div id="content">
         <div>
             <h2>Create a new Hunt:</h2>
-            <form action="create-hunt" method="post">
+            <form action="create-hunt">
                 <label for="hunt-name">Hunt Name:</label>
                 <input type="text" name="hunt-name" id="hunt-name" />
                 <input type="submit" value="Create" />
             </form>
         </div>
+        {% if hunts %}
         <div>
             <h2>Your Hunts:</h2>
             <table class="with-color">
@@ -38,6 +39,7 @@
                 {% endfor %}
             </table>
         </div>
+        {% endif %}
         </div>
     </body>
 </html>
