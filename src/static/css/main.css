@@ -13,6 +13,10 @@ A, A:active, A:hover, A:visited {
     color: #005;
 }
 
+A IMG, IMG {
+    border: 0;
+}
+
 H1 {
     background-color: #ACE;
     padding: 10px;
